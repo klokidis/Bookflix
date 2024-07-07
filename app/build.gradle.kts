@@ -68,13 +68,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.androidx.activity.compose.v172)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.material3)
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization.json)
     debugImplementation(libs.ui.test.manifest)
     debugImplementation(libs.ui.tooling)
@@ -86,28 +84,17 @@ dependencies {
 
 
     // Import the Compose BOM
-    implementation(platform(libs.androidx.compose.bom.v20240600))
-    implementation(libs.androidx.activity.compose.v180)
     implementation(libs.androidx.compose.material3.material3)
     implementation(libs.androidx.compose.ui.ui)
     implementation(libs.androidx.compose.ui.ui.tooling.preview)
-    implementation(libs.androidx.core.ktx.v1120)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v262)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // Retrofit
-    implementation(libs.retrofit2.kotlinx.serialization.converter)
-    implementation(libs.kotlinx.serialization.json)
-
     androidTestImplementation(libs.ui.test.junit4)
-    androidTestImplementation(libs.androidx.espresso.core.v351)
-    androidTestImplementation(libs.androidx.junit.v115)
 
     // Coil
     implementation(libs.coil.compose)
 
     //for testing
-    testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
 
     debugImplementation(libs.androidx.compose.ui.ui.test.manifest)

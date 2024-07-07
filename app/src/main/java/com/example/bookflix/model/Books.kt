@@ -17,7 +17,7 @@ data class Item(
     val volumeInfo: volumeInfo,
     val saleInfo: SaleInfo,
     val accessInfo: AccessInfo,
-    val searchInfo: SearchInfo? = null // this can be nullable as it might not always be present
+    val searchInfo: SearchInfo? = null //nullable as it might not always be present
 )
 @Serializable
 data class volumeInfo(
@@ -26,10 +26,10 @@ data class volumeInfo(
     val publisher: String? = null,
     val publishedDate: String? = null,
     val description: String? = null,
-    val industryIdentifiers: List<IndustryIdentifier>? = null,  // Include this field
+    val industryIdentifiers: List<IndustryIdentifier>? = null,
     val pageCount: Long? = null,
-    val printedPageCount: Long? = null,  // Correct field name
-    val dimensions: Dimensions? = null,  // Define Dimensions class if necessary
+    val printedPageCount: Long? = null,
+    val dimensions: Dimensions? = null,
     val printType: String? = null,
     val categories: List<String>? = null,
     val maturityRating: String? = null,
@@ -76,10 +76,10 @@ data class SaleInfo(
     val country: String,
     val saleability: String,
     val isEbook: Boolean,
-    val listPrice: Price? = null,  // Add this line
-    val retailPrice: Price? = null, // Add this line
-    val buyLink: String? = null,  // Add this line
-    val offers: List<Offer>? = null  // Add this line
+    val listPrice: Price? = null,
+    val retailPrice: Price? = null,
+    val buyLink: String? = null,
+    val offers: List<Offer>? = null
 )
 
 @Serializable
@@ -87,7 +87,7 @@ data class Offer(
     val finskyOfferType: Int,
     val listPrice: Price,
     val retailPrice: Price,
-    val giftable: Boolean? = null // Make giftable optional
+    val giftable: Boolean? = null
 )
 @Serializable
 data class Price(
@@ -112,14 +112,14 @@ data class AccessInfo(
 data class Epub(
     val isAvailable: Boolean,
     val acsTokenLink: String? = null,
-    val downloadLink: String? = null // Adding downloadLink as an optional field
+    val downloadLink: String? = null
 )
 
 @Serializable
 data class Pdf(
     val isAvailable: Boolean,
     val acsTokenLink: String? = null,
-    val downloadLink: String? = null // Adding downloadLink as an optional field
+    val downloadLink: String? = null
 )
 @Serializable
 data class SearchInfo(
