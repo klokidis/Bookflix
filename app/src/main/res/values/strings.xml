@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bookflix</string>
+    <string name="loading_failed">loading failed</string>
+    <string name="retry">retry</string>
+    <string name="loading">loading</string>
+    <string name="mars_photo">photo\n</string>
+</resources>
