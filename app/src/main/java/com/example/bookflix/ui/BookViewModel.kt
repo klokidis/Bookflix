@@ -13,7 +13,6 @@ import com.example.bookflix.BookflixApplication
 import com.example.bookflix.data.BooksRepository
 import com.example.bookflix.model.Item
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -50,16 +49,6 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
                     val deferredDystopian = async { booksRepository.getBooks("dystopian").shuffled() }
                     val deferredPoetry = async { booksRepository.getBooks("poetry").shuffled() }
                     val deferredComic = async { booksRepository.getBooks("comic").shuffled() }
-
-                    // Wait for all deferred operations to complete
-                    awaitAll(
-                        deferredHorror,
-                        deferredRomance,
-                        deferredMystery,
-                        deferredDystopian,
-                        deferredPoetry,
-                        deferredComic
-                    )
 
                     // Extract results
                     val horrorBooks = deferredHorror.await()

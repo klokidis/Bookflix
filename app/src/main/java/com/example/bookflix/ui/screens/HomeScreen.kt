@@ -60,7 +60,7 @@ fun RowOfBooks(
     bookType: String
 ){
     Column(
-        modifier = Modifier.padding(top = 10.dp)
+        modifier = Modifier.padding(top = 20.dp)
     ) {
         Text(
             text = bookType,
@@ -79,7 +79,7 @@ fun RowOfBooks(
                 AsyncImage(
                     modifier = Modifier
                         .width(140.dp)
-                        .padding(end = 5.dp)
+                        .padding(end = 7.dp)
                         .fillParentMaxHeight(),
                     model = ImageRequest.Builder(context = LocalContext.current)
                         .data((photo.volumeInfo.imageLinks.thumbnail).replace("http", "https"))
