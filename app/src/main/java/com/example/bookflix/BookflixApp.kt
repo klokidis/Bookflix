@@ -1,6 +1,7 @@
 package com.example.bookflix
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -29,16 +30,15 @@ fun BookflixApp(){
                     }
                 )
             }
-        ) {
+        ) { it ->
             Surface(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(it),
                 color = MaterialTheme.colorScheme.background
             ) {
                 val bookViewModel: BookViewModel = viewModel(factory = BookViewModel.Factory)
                 HomeScreen(
                     booksUiState = bookViewModel.booksUiState,
-                    retryAction = {  },
-                    contentPadding = it
+                    retryAction = { bookViewModel.getBooks() }
                 )
             }
         }

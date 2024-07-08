@@ -1,25 +1,23 @@
 package com.example.bookflix.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -36,54 +34,61 @@ fun HomeScreen(
     booksUiState: BooksUiState,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     when (booksUiState) {
         is BooksUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is BooksUiState.Success -> PhotosGridScreen(booksUiState.horrorBooks, modifier)
+        is BooksUiState.Success -> {
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+            ){
+                booksUiState.bookTypes.zip(booksUiState.typeNames).forEach { (books, typeName) ->
+                    RowOfBooks(books, typeName)
+                }
+            }
+        }
         else -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
 
 @Composable
-fun PhotosGridScreen(
+fun RowOfBooks(
     photos: List<Item>,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-) {
-    LazyColumn(modifier = modifier, contentPadding = contentPadding) {
-        items(photos.size) { index ->
-            // Assuming Item is your data class or model for each photo
-            val photo = photos[index]
-
-            // Display each photo using AsyncImage or any other Composable
-            AsyncImage(
-                modifier = Modifier.fillMaxWidth(),
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data((photo.volumeInfo.imageLinks.thumbnail).replace("http", "https"))
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                error = painterResource(id = R.drawable.ic_broken_image),
-                placeholder = painterResource(id = R.drawable.loading_img)
-            )
-
-            // You can add additional spacing or dividers between photos if needed
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
-}
-
-@Composable
-fun MarsPhotoCard(photo: Item, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    bookType: String
+){
+    Column(
+        modifier = Modifier.padding(top = 10.dp)
     ) {
-        Text(text = photo.selfLink)
+        Text(
+            text = bookType,
+        )
+        LazyRow(
+            modifier = Modifier
+                .height(200.dp)
+                .fillMaxWidth()
+        ) {
+            items(photos.size) { index ->
+                val photo = photos[index]
+
+                AsyncImage(
+                    modifier = Modifier
+                        .width(140.dp)
+                        .fillParentMaxHeight(),
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data((photo.volumeInfo.imageLinks.thumbnail).replace("http", "https"))
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = photo.volumeInfo.title,
+                    contentScale = ContentScale.FillBounds,
+                    error = painterResource(id = R.drawable.ic_broken_image),
+                    placeholder = painterResource(id = R.drawable.loading_img)
+                )
+
+                Spacer(modifier = Modifier.width(5.dp))
+            }
+
+        }
     }
 }
 
