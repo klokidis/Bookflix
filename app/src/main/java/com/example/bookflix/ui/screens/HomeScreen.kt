@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -62,6 +64,9 @@ fun RowOfBooks(
     ) {
         Text(
             text = bookType,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 2.dp)
         )
         LazyRow(
             modifier = Modifier
@@ -74,6 +79,7 @@ fun RowOfBooks(
                 AsyncImage(
                     modifier = Modifier
                         .width(140.dp)
+                        .padding(end = 5.dp)
                         .fillParentMaxHeight(),
                     model = ImageRequest.Builder(context = LocalContext.current)
                         .data((photo.volumeInfo.imageLinks.thumbnail).replace("http", "https"))
