@@ -1,5 +1,6 @@
 package com.example.bookflix.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +13,8 @@ import com.example.bookflix.BookflixApplication
 import com.example.bookflix.data.BooksRepository
 import com.example.bookflix.model.Item
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -40,40 +43,60 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
         viewModelScope.launch {
             booksUiState = BooksUiState.Loading
             booksUiState = try {
-                val deferredHorror = async { booksRepository.getBooks("horror").shuffled() }
-                val deferredRomance = async { booksRepository.getBooks("romance").shuffled() }
-                val deferredMystery = async { booksRepository.getBooks("mystery").shuffled() }
-                val deferredDystopian = async { booksRepository.getBooks("dystopian").shuffled() }
-                val deferredPoetry = async { booksRepository.getBooks("poetry").shuffled() }
-                val deferredComic = async { booksRepository.getBooks("comic").shuffled() }
+                coroutineScope {
+                    val deferredHorror = async { booksRepository.getBooks("horror").shuffled() }
+                    val deferredRomance = async { booksRepository.getBooks("romance").shuffled() }
+                    val deferredMystery = async { booksRepository.getBooks("mystery").shuffled() }
+                    val deferredDystopian = async { booksRepository.getBooks("dystopian").shuffled() }
+                    val deferredPoetry = async { booksRepository.getBooks("poetry").shuffled() }
+                    val deferredComic = async { booksRepository.getBooks("comic").shuffled() }
 
-                val horrorBooks = deferredHorror.await()
-                val romanceBooks = deferredRomance.await()
-                val mysteryBooks = deferredMystery.await()
-                val dystopianBooks = deferredDystopian.await()
-                val poetryBooks = deferredPoetry.await()
-                val comicBooks = deferredComic.await()
+                    // Wait for all deferred operations to complete
+                    awaitAll(
+                        deferredHorror,
+                        deferredRomance,
+                        deferredMystery,
+                        deferredDystopian,
+                        deferredPoetry,
+                        deferredComic
+                    )
 
-                val listOfTypes = listOf(
-                    horrorBooks,
-                    romanceBooks,
-                    mysteryBooks,
-                    dystopianBooks,
-                    poetryBooks,
-                    comicBooks
-                )
-                val typeNames = listOf(
-                    "Horror",
-                    "Romance",
-                    "Mystery",
-                    "Dystopian",
-                    "Poetry",
-                    "Comic"
-                )
-                BooksUiState.Success(horrorBooks, romanceBooks, listOfTypes, typeNames)
+                    // Extract results
+                    val horrorBooks = deferredHorror.await()
+                    val romanceBooks = deferredRomance.await()
+                    val mysteryBooks = deferredMystery.await()
+                    val dystopianBooks = deferredDystopian.await()
+                    val poetryBooks = deferredPoetry.await()
+                    val comicBooks = deferredComic.await()
+
+                    val listOfTypes = listOf(
+                        horrorBooks,
+                        romanceBooks,
+                        mysteryBooks,
+                        dystopianBooks,
+                        poetryBooks,
+                        comicBooks
+                    )
+
+                    val typeNames = listOf(
+                        "Horror",
+                        "Romance",
+                        "Mystery",
+                        "Dystopian",
+                        "Poetry",
+                        "Comic"
+                    )
+
+                    BooksUiState.Success(horrorBooks, romanceBooks, listOfTypes, typeNames)
+                }
             } catch (e: IOException) {
+                // Handle IOException
+                Log.e("BookViewModel", "Error IOException", e)
                 BooksUiState.Error
+
             } catch (e: HttpException) {
+                // Handle HttpException
+                Log.e("BookViewModel", "Error HttpException", e)
                 BooksUiState.Error
             }
         }
