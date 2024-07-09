@@ -4,4 +4,8 @@
     <string name="retry">retry</string>
     <string name="loading">loading</string>
     <string name="mars_photo">photo\n</string>
+    <string name="previous_button">previous</string>
+    <string name="title">"Title: "</string>
+    <string name="description">"Description: "</string>
+    <string name="languae">"Language: "</string>
 </resources>

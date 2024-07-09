@@ -1,6 +1,7 @@
 package com.example.bookflix.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ fun HomeScreen(
     booksUiState: BooksUiState,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
+    onBookPressed: (Item) -> Unit,
 ) {
     when (booksUiState) {
         is BooksUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
@@ -43,13 +45,15 @@ fun HomeScreen(
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
+                    .padding(start = 5.dp, end = 5.dp, bottom = 5.dp)
                     .verticalScroll(scrollState)
-            ){
+            ) {
                 booksUiState.bookTypes.zip(booksUiState.typeNames).forEach { (books, typeName) ->
-                    RowOfBooks(books, typeName)
+                    RowOfBooks(books, typeName, onBookPressed)
                 }
             }
         }
+
         else -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
@@ -57,10 +61,11 @@ fun HomeScreen(
 @Composable
 fun RowOfBooks(
     photos: List<Item>,
-    bookType: String
-){
+    bookType: String,
+    onBookPressed: (Item) -> Unit
+) {
     Column(
-        modifier = Modifier.padding(top = 20.dp)
+        modifier = Modifier.padding(bottom = 20.dp)
     ) {
         Text(
             text = bookType,
@@ -79,8 +84,9 @@ fun RowOfBooks(
                 AsyncImage(
                     modifier = Modifier
                         .width(140.dp)
-                        .padding(end = 7.dp)
-                        .fillParentMaxHeight(),
+                        .padding(end = 6.dp)
+                        .fillParentMaxHeight()
+                        .clickable(onClick = { onBookPressed(photo) }),
                     model = ImageRequest.Builder(context = LocalContext.current)
                         .data((photo.volumeInfo.imageLinks.thumbnail).replace("http", "https"))
                         .crossfade(true)

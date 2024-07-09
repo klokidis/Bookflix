@@ -12,8 +12,13 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bookflix.BookflixApplication
 import com.example.bookflix.data.BooksRepository
 import com.example.bookflix.model.Item
+import com.example.bookflix.model.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -34,8 +39,19 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
     var booksUiState: BooksUiState by mutableStateOf(BooksUiState.Loading)
         private set
 
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
     init {
         getBooks()
+    }
+
+    fun selectBook(book: Item) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                bookSelected = book
+            )
+        }
     }
 
     fun getBooks() {
@@ -46,7 +62,8 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
                     val deferredHorror = async { booksRepository.getBooks("horror").shuffled() }
                     val deferredRomance = async { booksRepository.getBooks("romance").shuffled() }
                     val deferredMystery = async { booksRepository.getBooks("mystery").shuffled() }
-                    val deferredDystopian = async { booksRepository.getBooks("dystopian").shuffled() }
+                    val deferredDystopian =
+                        async { booksRepository.getBooks("dystopian").shuffled() }
                     val deferredPoetry = async { booksRepository.getBooks("poetry").shuffled() }
                     val deferredComic = async { booksRepository.getBooks("comic").shuffled() }
 
