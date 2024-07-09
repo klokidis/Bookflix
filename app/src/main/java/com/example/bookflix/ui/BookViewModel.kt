@@ -15,7 +15,6 @@ import com.example.bookflix.model.Item
 import com.example.bookflix.model.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,33 +61,32 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
         viewModelScope.launch {
             booksUiState = BooksUiState.Loading
             booksUiState = try {
-                coroutineScope {
-                    val deferredResults = genres.map { genre ->
-                        async { genre to booksRepository.getBooks(genre).shuffled() }
-                    }
-
-                    val results = deferredResults.awaitAll().toMap()
-
-                    val horrorBooks = results["horror"].orEmpty()
-                    val romanceBooks = results["romance"].orEmpty()
-                    val mysteryBooks = results["mystery"].orEmpty()
-                    val dystopianBooks = results["dystopian"].orEmpty()
-                    val poetryBooks = results["poetry"].orEmpty()
-                    val comicBooks = results["comic"].orEmpty()
-
-                    val listOfTypes = listOf(
-                        horrorBooks,
-                        romanceBooks,
-                        mysteryBooks,
-                        dystopianBooks,
-                        poetryBooks,
-                        comicBooks
-                    )
-
-                    val typeNames = genres.map { it.capitalize(Locale.ROOT) } //first letter capitalized
-
-                    BooksUiState.Success(horrorBooks, romanceBooks, listOfTypes, typeNames)
+                val deferredResults = genres.map { genre ->
+                    async { genre to booksRepository.getBooks(genre).shuffled() }
                 }
+
+                val results = deferredResults.awaitAll().toMap()
+
+                val horrorBooks = results["horror"].orEmpty()
+                val romanceBooks = results["romance"].orEmpty()
+                val mysteryBooks = results["mystery"].orEmpty()
+                val dystopianBooks = results["dystopian"].orEmpty()
+                val poetryBooks = results["poetry"].orEmpty()
+                val comicBooks = results["comic"].orEmpty()
+
+                val listOfTypes = listOf(
+                    horrorBooks,
+                    romanceBooks,
+                    mysteryBooks,
+                    dystopianBooks,
+                    poetryBooks,
+                    comicBooks
+                )
+
+                val typeNames = genres.map { it.capitalize(Locale.ROOT) } //first letter capitalized
+
+                BooksUiState.Success(horrorBooks, romanceBooks, listOfTypes, typeNames)
+
             } catch (e: IOException) {
                 // Handle IOException
                 Log.e("BookViewModel", "Error IOException", e)
