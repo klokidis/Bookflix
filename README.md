@@ -11,6 +11,7 @@ Bookflix is an Android application developed in Kotlin and Jetpack Compose. It l
   - Retrofit for seamless network operations.
   - Repository pattern for clean and structured data management.
 
+
 ## Architecture
 
 Bookflix adheres to the MVVM (Model-View-ViewModel) architecture, ensuring separation of concerns and scalability. Key architectural components include:
@@ -26,5 +27,5 @@ Bookflix adheres to the MVVM (Model-View-ViewModel) architecture, ensuring separ
 Upon launching Bookflix, you'll be greeted with a list of books fetched from the Google Books API. Tap on any book to view detailed information. 
 
 ## Screenshots
-
-(Screenshots to be added soon)
+<img src="https://github.com/klokidis/Bookflix/assets/132920931/98044bc7-caab-4605-ac0c-4a28c3a42fbf" width="200" alt="Screenshot2">
+<img src="https://github.com/klokidis/Bookflix/assets/132920931/7e4a7f7f-21af-4f12-949b-5ccb7b26333d" width="200" alt="Screenshot1">
