@@ -14,6 +14,7 @@ import com.example.bookflix.data.BooksRepository
 import com.example.bookflix.model.Item
 import com.example.bookflix.model.UiState
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.Locale
 
 sealed interface BooksUiState {
     data class Success(
@@ -39,11 +41,13 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
     var booksUiState: BooksUiState by mutableStateOf(BooksUiState.Loading)
         private set
 
+    private val genres = listOf("horror", "romance", "mystery", "dystopian", "poetry", "comic")
+
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     init {
-        getBooks()
+        booksApiCall()
     }
 
     fun selectBook(book: Item) {
@@ -54,26 +58,23 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
         }
     }
 
-    fun getBooks() {
+    fun booksApiCall() {
         viewModelScope.launch {
             booksUiState = BooksUiState.Loading
             booksUiState = try {
                 coroutineScope {
-                    val deferredHorror = async { booksRepository.getBooks("horror").shuffled() }
-                    val deferredRomance = async { booksRepository.getBooks("romance").shuffled() }
-                    val deferredMystery = async { booksRepository.getBooks("mystery").shuffled() }
-                    val deferredDystopian =
-                        async { booksRepository.getBooks("dystopian").shuffled() }
-                    val deferredPoetry = async { booksRepository.getBooks("poetry").shuffled() }
-                    val deferredComic = async { booksRepository.getBooks("comic").shuffled() }
+                    val deferredResults = genres.map { genre ->
+                        async { genre to booksRepository.getBooks(genre).shuffled() }
+                    }
 
-                    // Extract results
-                    val horrorBooks = deferredHorror.await()
-                    val romanceBooks = deferredRomance.await()
-                    val mysteryBooks = deferredMystery.await()
-                    val dystopianBooks = deferredDystopian.await()
-                    val poetryBooks = deferredPoetry.await()
-                    val comicBooks = deferredComic.await()
+                    val results = deferredResults.awaitAll().toMap()
+
+                    val horrorBooks = results["horror"].orEmpty()
+                    val romanceBooks = results["romance"].orEmpty()
+                    val mysteryBooks = results["mystery"].orEmpty()
+                    val dystopianBooks = results["dystopian"].orEmpty()
+                    val poetryBooks = results["poetry"].orEmpty()
+                    val comicBooks = results["comic"].orEmpty()
 
                     val listOfTypes = listOf(
                         horrorBooks,
@@ -84,14 +85,7 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
                         comicBooks
                     )
 
-                    val typeNames = listOf(
-                        "Horror",
-                        "Romance",
-                        "Mystery",
-                        "Dystopian",
-                        "Poetry",
-                        "Comic"
-                    )
+                    val typeNames = genres.map { it.capitalize(Locale.ROOT) } //first letter capitalized
 
                     BooksUiState.Success(horrorBooks, romanceBooks, listOfTypes, typeNames)
                 }
@@ -99,7 +93,6 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
                 // Handle IOException
                 Log.e("BookViewModel", "Error IOException", e)
                 BooksUiState.Error
-
             } catch (e: HttpException) {
                 // Handle HttpException
                 Log.e("BookViewModel", "Error HttpException", e)
