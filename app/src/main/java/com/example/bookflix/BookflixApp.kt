@@ -73,7 +73,7 @@ fun BookflixApp(
         ) {
             composable(route = Screens.Start.name) {
                 HomeScreen(
-                    retryAction = { bookViewModel.booksApiCall() },
+                    retryAction = { bookViewModel.booksApiLaunchCall() },
                     onBookPressed = {
                         bookViewModel.selectBook(it)
                         navController.navigate(Screens.BookPage.name)

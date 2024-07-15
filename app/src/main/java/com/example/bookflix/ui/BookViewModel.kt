@@ -32,6 +32,10 @@ sealed interface BooksUiState {
         val typeNames: List<String>
     ) : BooksUiState
 
+    data class SuccessfulSearch(
+        val Books: List<Item>,
+    ) : BooksUiState
+
     object Error : BooksUiState
     object Loading : BooksUiState
 }
@@ -46,7 +50,7 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     init {
-        booksApiCall()
+        booksApiLaunchCall()
     }
 
     fun selectBook(book: Item) {
@@ -57,7 +61,29 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
         }
     }
 
-    fun booksApiCall() {
+    fun searchBook(name: String) {
+        viewModelScope.launch {
+            booksUiState = BooksUiState.Loading
+            booksUiState = try {
+                val deferredResult = async { booksRepository.getBooks(name).shuffled() }
+
+                val result = deferredResult.await()
+
+                BooksUiState.SuccessfulSearch(result)
+            } catch (e: IOException) {
+                // Handle IOException
+                Log.e("BookViewModel", "Error IOException", e)
+                BooksUiState.Error
+            } catch (e: HttpException) {
+                // Handle HttpException
+                Log.e("BookViewModel", "Error HttpException", e)
+                BooksUiState.Error
+            }
+        }
+    }
+
+    //hardcoded
+    fun booksApiLaunchCall() {
         viewModelScope.launch {
             booksUiState = BooksUiState.Loading
             booksUiState = try {
