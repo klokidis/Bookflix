@@ -14,7 +14,7 @@ class DefaultAppContainer : AppContainer {
     private val BASE_URL = "https://www.googleapis.com/books/v1/"
 
     /**
-     * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
+     * Retrofit builder to build a retrofit object using a kotlinx.serialization converter
      */
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -32,7 +32,7 @@ class DefaultAppContainer : AppContainer {
     }
 
     /**
-     * DI implementation for Amphibians repository
+     * DI implementation for repository
      */
     override val booksRepository: BooksRepository by lazy {
         DefaultBooksRepository(retrofitService)
