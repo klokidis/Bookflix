@@ -106,7 +106,7 @@ fun RowOfBooks(
                         .fillParentMaxHeight()
                         .clickable(onClick = { onBookPressed(photo) }),
                     model = ImageRequest.Builder(context = LocalContext.current)
-                        .data((photo.volumeInfo.imageLinks.thumbnail).replace("http", "https"))
+                        .data((photo.volumeInfo.imageLinks?.thumbnail)?.replace("http", "https"))
                         .crossfade(true)
                         .build(),
                     contentDescription = photo.volumeInfo.title,

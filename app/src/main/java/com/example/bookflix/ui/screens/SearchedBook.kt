@@ -56,10 +56,17 @@ fun SearchedBook(
                                     .clickable(onClick = { onBookPressed(thisBook) }),
                                 model = ImageRequest.Builder(context = LocalContext.current)
                                     .data(
-                                        (thisBook.volumeInfo.imageLinks.thumbnail).replace(
-                                            "http",
-                                            "https"
-                                        )
+                                        try {
+                                            (thisBook.volumeInfo.imageLinks?.thumbnail)?.replace(
+                                                "http",
+                                                "https"
+                                            )
+                                        }catch(e : Exception){
+                                            (thisBook.volumeInfo.imageLinks?.smallThumbnail)?.replace(
+                                                "http",
+                                                "https"
+                                            )
+                                        }
                                     )
                                     .crossfade(true)
                                     .build(),

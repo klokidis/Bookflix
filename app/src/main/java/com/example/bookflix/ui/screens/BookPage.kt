@@ -42,7 +42,7 @@ fun BookPage(
                 .height(290.dp)
                 .padding(end = 6.dp),
             model = ImageRequest.Builder(context = LocalContext.current)
-                .data((book.volumeInfo.imageLinks.thumbnail).replace("http", "https"))
+                .data((book.volumeInfo.imageLinks?.thumbnail)?.replace("http", "https"))
                 .crossfade(true)
                 .build(),
             contentDescription = book.volumeInfo.title,
