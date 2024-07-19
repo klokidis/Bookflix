@@ -54,11 +54,11 @@ fun HomeScreen(
     when (booksUiState) {
         is BooksUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is BooksUiState.Success -> {
+            val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
                 SearchBarUi()
-                val scrollState = rememberScrollState()
                 Column(
                     modifier = Modifier
                         .padding(start = 5.dp, end = 5.dp, bottom = 5.dp)

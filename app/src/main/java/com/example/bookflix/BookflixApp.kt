@@ -40,32 +40,39 @@ fun BookflixApp(
     Screens.valueOf(
         backStackEntry?.destination?.route ?: Screens.Start.name
     )
+    val currentScreen = Screens.valueOf(
+        backStackEntry?.destination?.route ?: Screens.Start.name
+    )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    if (navController.previousBackStackEntry != null) {
+            if (navController.previousBackStackEntry != null) {
+                TopAppBar(
+                    navigationIcon = {
+
                         IconButton(onClick = { navController.navigateUp() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.previous_button)
                             )
                         }
-                    }
-                },
-                title = {
-                    Text(
-                        stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                }
-            )
+
+                    },
+                    title = {
+                        Text(
+                            stringResource(R.string.app_name),
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    },
+                )
+            }
         }
     ) { innerPadding ->
+
         val bookViewModel: BookViewModel = viewModel(factory = BookViewModel.Factory)
         val uiState = bookViewModel.booksUiState
         val uiStateValues = bookViewModel.uiState.collectAsState()
+
         NavHost(
             navController = navController,
             startDestination = Screens.Start.name,
