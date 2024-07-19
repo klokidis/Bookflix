@@ -3,6 +3,7 @@ package com.example.bookflix.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -53,7 +54,7 @@ fun SearchedBook(
                             AsyncImage(
                                 modifier = Modifier
                                     .height(300.dp)
-                                    .clickable(onClick = { onBookPressed(thisBook)}),
+                                    .clickable(onClick = { onBookPressed(thisBook) }),
                                 model = ImageRequest.Builder(context = LocalContext.current)
                                     .data(
                                         (thisBook.volumeInfo.imageLinks.thumbnail).replace(
@@ -73,17 +74,25 @@ fun SearchedBook(
                     }
             }
         }
+
         else -> ErrorScreen2({ })
     }
 }
 
 @Composable
 fun LoadingScreen2(modifier: Modifier = Modifier) {
-    Image(
-        modifier = modifier.size(200.dp),
-        painter = painterResource(R.drawable.loading_img),
-        contentDescription = stringResource(R.string.loading)
-    )
+    Column(
+        modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            modifier = modifier.size(200.dp),
+            painter = painterResource(R.drawable.loading_img),
+            contentDescription = stringResource(R.string.loading)
+        )
+
+    }
 }
 
 @Composable
