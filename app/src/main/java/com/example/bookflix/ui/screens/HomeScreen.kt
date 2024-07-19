@@ -136,7 +136,7 @@ fun SearchBarUi(
     SearchBar(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 5.dp, top = 0.dp),
+            .padding(5.dp),
         query = text, onQueryChange = {
             text = it
         },
