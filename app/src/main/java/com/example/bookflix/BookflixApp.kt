@@ -25,10 +25,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bookflix.ui.BookViewModel
 import com.example.bookflix.ui.screens.BookPage
 import com.example.bookflix.ui.screens.HomeScreen
+import com.example.bookflix.ui.screens.SearchedBook
 
 enum class Screens {
     Start,
     BookPage,
+    Searched
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,10 +39,8 @@ fun BookflixApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
+
     Screens.valueOf(
-        backStackEntry?.destination?.route ?: Screens.Start.name
-    )
-    val currentScreen = Screens.valueOf(
         backStackEntry?.destination?.route ?: Screens.Start.name
     )
     Scaffold(
@@ -84,7 +84,8 @@ fun BookflixApp(
                         navController.navigate(Screens.BookPage.name)
                     },
                     onSearched = {
-                        navController.navigate(Screens.BookPage.name)//ADD NEW PAGE AND COMPOSABLE
+                        bookViewModel.searchBook(it)
+                        navController.navigate(Screens.Searched.name)
                     },
                     booksUiState = uiState,
                 )
@@ -92,6 +93,11 @@ fun BookflixApp(
             composable(route = Screens.BookPage.name) {
                 BookPage(
                     uiStateValues.value.bookSelected
+                )
+            }
+            composable(route = Screens.Searched.name) {
+                SearchedBook(
+                    booksUiState = uiState
                 )
             }
         }

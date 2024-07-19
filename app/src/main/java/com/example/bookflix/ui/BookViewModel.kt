@@ -32,12 +32,12 @@ sealed interface BooksUiState {
         val typeNames: List<String>
     ) : BooksUiState
 
-    data class SuccessfulSearch(
-        val Books: List<Item>,
+    data class SuccessSearch(
+        val searchedBooks: List<Item>
     ) : BooksUiState
 
-    object Error : BooksUiState
-    object Loading : BooksUiState
+    data object Error : BooksUiState
+    data object Loading : BooksUiState
 }
 
 class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() {
@@ -69,7 +69,9 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
 
                 val result = deferredResult.await()
 
-                BooksUiState.SuccessfulSearch(result)
+                Log.d("BookViewModel",result.toString() )
+
+                BooksUiState.SuccessSearch(result)
             } catch (e: IOException) {
                 // Handle IOException
                 Log.e("BookViewModel", "Error IOException", e)

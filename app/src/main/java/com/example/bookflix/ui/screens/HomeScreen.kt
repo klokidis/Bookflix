@@ -48,12 +48,12 @@ fun HomeScreen(
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     onBookPressed: (Item) -> Unit,
-    onSearched: (Item) -> Unit
+    onSearched: (String) -> Unit
 ) {
 
     when (booksUiState) {
         is BooksUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is BooksUiState.Success -> {
+        is BooksUiState.Success  -> {
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -70,11 +70,9 @@ fun HomeScreen(
                         .forEach { (books, typeName) ->
                             RowOfBooks(books, typeName, onBookPressed)
                         }
-
                 }
             }
         }
-
         else -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
@@ -127,7 +125,7 @@ fun RowOfBooks(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBarUi(
-    onSearched: (Item) -> Unit
+    onSearched: (String) -> Unit
 ) {
     var text by rememberSaveable {
         mutableStateOf("")
@@ -167,6 +165,7 @@ fun SearchBarUi(
         },
         onSearch = {
             active = false
+            onSearched(text)
         },
         active = active,
         onActiveChange = {
