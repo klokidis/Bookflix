@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -146,6 +147,20 @@ fun SearchBarUi() {
                 imageVector = Icons.Default.Search,
                 contentDescription = null
             )
+        },
+        trailingIcon = {
+            if (active) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        if (text.isEmpty()) {
+                            active = false
+                        }
+                        text = ""
+                    },
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = null
+                )
+            }
         },
         onSearch = {
             active = false
