@@ -166,6 +166,7 @@ fun SearchBarUi(
         onSearch = {
             active = false
             onSearched(text)
+            text = ""
         },
         active = active,
         onActiveChange = {

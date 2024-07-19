@@ -1,5 +1,6 @@
 package com.example.bookflix.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,11 +19,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookflix.R
+import com.example.bookflix.model.Item
 import com.example.bookflix.ui.BooksUiStateSearch
 
 @Composable
 fun SearchedBook(
-    booksUiState: BooksUiStateSearch
+    booksUiState: BooksUiStateSearch,
+    onBookPressed: (Item) -> Unit,
 ) {
     when (booksUiState) {
         is BooksUiStateSearch.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
@@ -45,7 +48,8 @@ fun SearchedBook(
                         ) {
                             AsyncImage(
                                 modifier = Modifier
-                                    .height(300.dp),
+                                    .height(300.dp)
+                                    .clickable(onClick = { onBookPressed(thisBook)}),
                                 model = ImageRequest.Builder(context = LocalContext.current)
                                     .data(
                                         (thisBook.volumeInfo.imageLinks.thumbnail).replace(

@@ -98,7 +98,11 @@ fun BookflixApp(
             }
             composable(route = Screens.Searched.name) {
                 SearchedBook(
-                    booksUiState = uiStateSearch
+                    booksUiState = uiStateSearch,
+                    onBookPressed = {
+                        bookViewModel.selectBook(it)
+                        navController.navigate(Screens.BookPage.name)
+                    }
                 )
             }
         }
