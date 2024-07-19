@@ -49,14 +49,12 @@ fun BookflixApp(
             if (navController.previousBackStackEntry != null) {
                 TopAppBar(
                     navigationIcon = {
-
                         IconButton(onClick = { navController.navigateUp() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.previous_button)
                             )
                         }
-
                     },
                     title = {
                         Text(
