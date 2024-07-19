@@ -83,6 +83,9 @@ fun BookflixApp(
                         bookViewModel.selectBook(it)
                         navController.navigate(Screens.BookPage.name)
                     },
+                    onSearched = {
+                        navController.navigate(Screens.BookPage.name)//ADD NEW PAGE AND COMPOSABLE
+                    },
                     booksUiState = uiState,
                 )
             }

@@ -21,7 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +48,7 @@ fun HomeScreen(
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     onBookPressed: (Item) -> Unit,
+    onSearched: (Item) -> Unit
 ) {
 
     when (booksUiState) {
@@ -58,7 +58,9 @@ fun HomeScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                SearchBarUi()
+                SearchBarUi(
+                    onSearched
+                )
                 Column(
                     modifier = Modifier
                         .padding(start = 5.dp, end = 5.dp, bottom = 5.dp)
@@ -99,7 +101,6 @@ fun RowOfBooks(
         ) {
             items(photos.size) { index ->
                 val photo = photos[index]
-
                 AsyncImage(
                     modifier = Modifier
                         .width(140.dp)
@@ -125,7 +126,9 @@ fun RowOfBooks(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarUi() {
+fun SearchBarUi(
+    onSearched: (Item) -> Unit
+) {
     var text by rememberSaveable {
         mutableStateOf("")
     }
