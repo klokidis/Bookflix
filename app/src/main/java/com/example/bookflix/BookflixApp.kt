@@ -69,6 +69,7 @@ fun BookflixApp(
 
         val bookViewModel: BookViewModel = viewModel(factory = BookViewModel.Factory)
         val uiState = bookViewModel.booksUiState
+        val uiStateSearch = bookViewModel.booksUiStateSearch
         val uiStateValues = bookViewModel.uiState.collectAsState()
 
         NavHost(
@@ -97,7 +98,7 @@ fun BookflixApp(
             }
             composable(route = Screens.Searched.name) {
                 SearchedBook(
-                    booksUiState = uiState
+                    booksUiState = uiStateSearch
                 )
             }
         }

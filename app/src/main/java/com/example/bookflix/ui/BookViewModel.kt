@@ -32,16 +32,25 @@ sealed interface BooksUiState {
         val typeNames: List<String>
     ) : BooksUiState
 
-    data class SuccessSearch(
-        val searchedBooks: List<Item>
-    ) : BooksUiState
-
     data object Error : BooksUiState
     data object Loading : BooksUiState
 }
 
+sealed interface BooksUiStateSearch {
+    data class Success(
+        val searchedBooks: List<Item>
+    ) : BooksUiStateSearch
+
+    data object Error : BooksUiStateSearch
+    data object Loading : BooksUiStateSearch
+}
+
 class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() {
+
     var booksUiState: BooksUiState by mutableStateOf(BooksUiState.Loading)
+        private set
+
+    var booksUiStateSearch: BooksUiStateSearch by mutableStateOf(BooksUiStateSearch.Loading)
         private set
 
     private val genres = listOf("horror", "romance", "mystery", "dystopian", "poetry", "comic")
@@ -61,26 +70,25 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
         }
     }
 
+
     fun searchBook(name: String) {
         viewModelScope.launch {
-            booksUiState = BooksUiState.Loading
-            booksUiState = try {
-                val deferredResult = async { booksRepository.getBooks(name).shuffled() }
+            booksUiStateSearch = BooksUiStateSearch.Loading
+            booksUiStateSearch = fetchBooksByName(name)
+        }
+    }
 
-                val result = deferredResult.await()
-
-                Log.d("BookViewModel",result.toString() )
-
-                BooksUiState.SuccessSearch(result)
-            } catch (e: IOException) {
-                // Handle IOException
-                Log.e("BookViewModel", "Error IOException", e)
-                BooksUiState.Error
-            } catch (e: HttpException) {
-                // Handle HttpException
-                Log.e("BookViewModel", "Error HttpException", e)
-                BooksUiState.Error
-            }
+    private suspend fun fetchBooksByName(name: String): BooksUiStateSearch {
+        return try {
+            val result = booksRepository.getBooks(name).shuffled()
+            Log.d("BookViewModel", result.toString())
+            BooksUiStateSearch.Success(result)
+        } catch (e: IOException) {
+            Log.e("BookViewModel", "Error IOException", e)
+            BooksUiStateSearch.Error
+        } catch (e: HttpException) {
+            Log.e("BookViewModel", "Error HttpException", e)
+            BooksUiStateSearch.Error
         }
     }
 

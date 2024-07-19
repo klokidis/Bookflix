@@ -18,15 +18,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookflix.R
-import com.example.bookflix.ui.BooksUiState
+import com.example.bookflix.ui.BooksUiStateSearch
 
 @Composable
 fun SearchedBook(
-    booksUiState: BooksUiState
+    booksUiState: BooksUiStateSearch
 ) {
     when (booksUiState) {
-        is BooksUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
-        is BooksUiState.SuccessSearch -> {
+        is BooksUiStateSearch.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+        is BooksUiStateSearch.Success -> {
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
