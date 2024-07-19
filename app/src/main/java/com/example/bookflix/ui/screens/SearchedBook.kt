@@ -3,7 +3,6 @@ package com.example.bookflix.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -33,7 +32,7 @@ fun SearchedBook(
     onBookPressed: (Item) -> Unit,
 ) {
     when (booksUiState) {
-        is BooksUiStateSearch.Loading -> LoadingScreen2()
+        is BooksUiStateSearch.Loading -> LoadingScreenSearch()
         is BooksUiStateSearch.Success -> {
             val scrollState = rememberScrollState()
             Column(
@@ -75,12 +74,12 @@ fun SearchedBook(
             }
         }
 
-        else -> ErrorScreen2({ })
+        else -> ErrorScreenSearch({ })
     }
 }
 
 @Composable
-fun LoadingScreen2(modifier: Modifier = Modifier) {
+fun LoadingScreenSearch(modifier: Modifier = Modifier) {
     Column(
         modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -96,18 +95,12 @@ fun LoadingScreen2(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorScreen2(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorScreenSearch(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
-        )
-        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
-        Button(onClick = retryAction) {
-            Text(stringResource(R.string.retry))
-        }
+        Text(text = stringResource(R.string.noBooks), modifier = Modifier.padding(16.dp))
     }
 }
