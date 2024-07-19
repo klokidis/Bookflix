@@ -82,7 +82,12 @@ class BookViewModel(private val booksRepository: BooksRepository) : ViewModel() 
         return try {
             val result = booksRepository.getBooks(name).shuffled()
             Log.d("BookViewModel", result.toString())
-            BooksUiStateSearch.Success(result)
+            if(result.isNotEmpty()){
+                BooksUiStateSearch.Success(result)
+            }else{
+                BooksUiStateSearch.Error
+            }
+
         } catch (e: IOException) {
             Log.e("BookViewModel", "Error IOException", e)
             BooksUiStateSearch.Error
