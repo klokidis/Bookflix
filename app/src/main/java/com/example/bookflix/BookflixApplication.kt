@@ -9,6 +9,6 @@ class BookflixApplication : Application() {
     lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
-        container= DefaultAppContainer()//This container holds all the dependencies (like databases, network clients, or repositories) that the app needs.
+        container = DefaultAppContainer()//This container holds all the dependencies (like databases, network clients, or repositories) that the app needs.
     }
 }

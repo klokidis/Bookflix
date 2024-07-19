@@ -24,7 +24,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.util.Locale
 
-sealed interface BooksUiState {
+sealed interface BooksUiState { //for main screen
     data class Success(
         val horrorBooks: List<Item>,
         val romanceBooks: List<Item>,
@@ -36,7 +36,7 @@ sealed interface BooksUiState {
     data object Loading : BooksUiState
 }
 
-sealed interface BooksUiStateSearch {
+sealed interface BooksUiStateSearch { //for search book screen
     data class Success(
         val searchedBooks: List<Item>
     ) : BooksUiStateSearch
