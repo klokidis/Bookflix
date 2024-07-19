@@ -14,10 +14,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -39,17 +49,25 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onBookPressed: (Item) -> Unit,
 ) {
+
     when (booksUiState) {
         is BooksUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is BooksUiState.Success -> {
-            val scrollState = rememberScrollState()
             Column(
-                modifier = Modifier
-                    .padding(start = 5.dp, end = 5.dp, bottom = 5.dp)
-                    .verticalScroll(scrollState)
+                modifier = Modifier.fillMaxSize()
             ) {
-                booksUiState.bookTypes.zip(booksUiState.typeNames).forEach { (books, typeName) ->
-                    RowOfBooks(books, typeName, onBookPressed)
+                SearchBarUi()
+                val scrollState = rememberScrollState()
+                Column(
+                    modifier = Modifier
+                        .padding(start = 5.dp, end = 5.dp, bottom = 5.dp)
+                        .verticalScroll(scrollState)
+                ) {
+                    booksUiState.bookTypes.zip(booksUiState.typeNames)
+                        .forEach { (books, typeName) ->
+                            RowOfBooks(books, typeName, onBookPressed)
+                        }
+
                 }
             }
         }
@@ -101,6 +119,43 @@ fun RowOfBooks(
             }
 
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBarUi() {
+    var text by rememberSaveable {
+        mutableStateOf("")
+    }
+    var active by rememberSaveable {
+        mutableStateOf(false)
+    }
+    SearchBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 5.dp, top = 0.dp),
+        query = text, onQueryChange = {
+            text = it
+        },
+        placeholder = {
+            Text(text = "Search")
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null
+            )
+        },
+        onSearch = {
+            active = false
+        },
+        active = active,
+        onActiveChange = {
+            active = it
+        }
+    ) {
+
     }
 }
 
