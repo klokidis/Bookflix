@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,7 +51,7 @@ fun SearchedBook(
                         ) {
                             AsyncImage(
                                 modifier = Modifier
-                                    .height(300.dp)
+                                    .height(250.dp)
                                     .clickable(onClick = { onBookPressed(thisBook) }),
                                 model = ImageRequest.Builder(context = LocalContext.current)
                                     .data(
@@ -81,7 +80,7 @@ fun SearchedBook(
             }
         }
 
-        else -> ErrorScreenSearch({ })
+        else -> ErrorScreenSearch()
     }
 }
 
@@ -102,7 +101,7 @@ fun LoadingScreenSearch(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorScreenSearch(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorScreenSearch(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
