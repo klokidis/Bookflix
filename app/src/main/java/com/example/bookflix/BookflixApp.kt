@@ -1,5 +1,8 @@
 package com.example.bookflix
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -75,8 +78,10 @@ fun BookflixApp(
         NavHost(
             navController = navController,
             startDestination = Screens.Start.name,
-            modifier = Modifier.padding(innerPadding)
-        ) {
+            modifier = Modifier.padding(innerPadding),
+            enterTransition = { fadeIn(animationSpec = tween(0)) },
+            exitTransition = { fadeOut(animationSpec = tween(0)) },
+            ) {
             composable(route = Screens.Start.name) {
                 HomeScreen(
                     retryAction = { bookViewModel.booksApiLaunchCall() },

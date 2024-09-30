@@ -13,11 +13,11 @@ interface AppContainer {
 class DefaultAppContainer : AppContainer {
     private val BASE_URL = "https://www.googleapis.com/books/v1/"
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     /**
      * Retrofit builder to build a retrofit object using a kotlinx.serialization converter
      */
-    private val json = Json { ignoreUnknownKeys = true }
-
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(BASE_URL)

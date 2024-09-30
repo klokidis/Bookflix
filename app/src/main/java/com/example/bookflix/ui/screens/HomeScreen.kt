@@ -53,7 +53,7 @@ fun HomeScreen(
 
     when (booksUiState) {
         is BooksUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is BooksUiState.Success  -> {
+        is BooksUiState.Success -> {
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -63,16 +63,18 @@ fun HomeScreen(
                 )
                 Column(
                     modifier = Modifier
-                        .padding(start = 5.dp, end = 5.dp, bottom = 5.dp)
+                        .padding(start = 5.dp, end = 5.dp)
                         .verticalScroll(scrollState)
                 ) {
                     booksUiState.bookTypes.zip(booksUiState.typeNames)
                         .forEach { (books, typeName) ->
                             RowOfBooks(books, typeName, onBookPressed)
+                            Spacer(modifier = Modifier.padding(10.dp))
                         }
                 }
             }
         }
+
         else -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
@@ -83,9 +85,7 @@ fun RowOfBooks(
     bookType: String,
     onBookPressed: (Item) -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(bottom = 20.dp)
-    ) {
+    Column {
         Text(
             text = bookType,
             style = MaterialTheme.typography.headlineMedium,

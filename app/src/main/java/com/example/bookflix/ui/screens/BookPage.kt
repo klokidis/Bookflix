@@ -33,7 +33,7 @@ fun BookPage(
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxSize()
-            .padding(start = 15.dp, end = 15.dp, bottom = 20.dp),
+            .padding(start = 15.dp, end = 15.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -63,7 +63,6 @@ fun BookPage(
         if (book.volumeInfo.description != null) {
             RowOfText(stringResource(id = R.string.description), book.volumeInfo.description)
         }
-
     }
 }
 
